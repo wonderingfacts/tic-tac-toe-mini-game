@@ -4,10 +4,12 @@
     <title>Telegram Tic Tac Toe</title>
     <script src="https://telegram.org/js/telegram-web-app.js"> const tg = window.Telegram.WebApp;
 tg.ready(); // Initialize the Mini App
-tg.expand(); // Expand the Mini App to full screen </script>
-    tg.MainButton.setText('Close Game').onClick(() => tg.close()).show();
+tg.expand(); // Expand the Mini App to full screen
+tg.MainButton.setText('Close Game').onClick(() => tg.close()).show();
     // Example: Add haptic feedback when a cell is clicked
 tg.HapticFeedback.impactOccurred('light');
+    </script>
+    
     <style>
         :root {
             --tg-theme-bg-color: #ffffff;
