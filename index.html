@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Telegram Tic Tac Toe</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --tg-theme-bg-color: #ffffff;
+            --tg-theme-text-color: #000000;
+            --cell-size: 80px;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: var(--tg-theme-bg-color);
+            color: var(--tg-theme-text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .cell {
+            width: var(--cell-size);
+            height: var(--cell-size);
+            background: rgba(0, 0, 0, 0.1);
+            border: none;
+            border-radius: 10px;
+            font-size: 40px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .cell:hover {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .cell.x {
+            color: #e74c3c;
+        }
+
+        .cell.o {
+            color: #3498db;
+        }
+
+        .status {
+            font-size: 24px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .restart {
+            padding: 10px 20px;
+            font-size: 18px;
+            background: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Tic Tac Toe</h1>
+    <div class="status" id="status">Player X's turn</div>
+    <div class="board" id="board"></div>
+
+    <script>
+        // Telegram Web App initialization
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.MainButton.setText('Close Game').onClick(tg.close).show();
+
+        // Game state
+        let currentPlayer = 'X';
+        let gameBoard = Array(9).fill('');
+        let gameActive = true;
+
+        // Create board
+        const board = document.getElementById('board');
+        for (let i = 0; i < 9; i++) {
+            const cell = document.createElement('button');
+            cell.className = 'cell';
+            cell.addEventListener('click', () => handleCellClick(i));
+            board.appendChild(cell);
+        }
+
+        // Game logic
+        function handleCellClick(index) {
+            if (!gameActive || gameBoard[index] !== '') return;
+
+            gameBoard[index] = currentPlayer;
+            const cell = board.children[index];
+            cell.textContent = currentPlayer;
+            cell.classList.add(currentPlayer.toLowerCase());
+            
+            if (checkWin()) {
+                document.getElementById('status').textContent = `Player ${currentPlayer} wins!`;
+                tg.HapticFeedback.impactOccurred('heavy');
+                gameActive = false;
+                tg.sendData(JSON.stringify({ winner: currentPlayer }));
+                return;
+            }
+
+            if (checkDraw()) {
+                document.getElementById('status').textContent = "It's a draw!";
+                tg.HapticFeedback.impactOccurred('medium');
+                gameActive = false;
+                return;
+            }
+
+            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+            document.getElementById('status').textContent = `Player ${currentPlayer}'s turn`;
+            tg.HapticFeedback.impactOccurred('light');
+        }
+
+        function checkWin() {
+            const winPatterns = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+                [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+                [0, 4, 8], [2, 4, 6] // Diagonals
+            ];
+
+            return winPatterns.some(pattern => 
+                pattern.every(index => 
+                    gameBoard[index] === currentPlayer
+                )
+            );
+        }
+
+        function checkDraw() {
+            return gameBoard.every(cell => cell !== '');
+        }
+
+        // Reset game
+        function resetGame() {
+            gameBoard = Array(9).fill('');
+            currentPlayer = 'X';
+            gameActive = true;
+            document.getElementById('status').textContent = `Player ${currentPlayer}'s turn`;
+            Array.from(board.children).forEach(cell => {
+                cell.textContent = '';
+                cell.className = 'cell';
+            });
+            tg.HapticFeedback.impactOccurred('rigid');
+        }
+
+        // Add reset button
+        const resetButton = document.createElement('button');
+        resetButton.className = 'restart';
+        resetButton.textContent = 'New Game';
+        resetButton.addEventListener('click', resetGame);
+        document.body.appendChild(resetButton);
+
+        // Telegram user info
+        if (tg.initDataUnsafe.user) {
+            const user = tg.initDataUnsafe.user;
+            document.title = `${user.first_name}'s Tic Tac Toe`;
+        }
+    </script>
+</body>
+</html>
