@@ -76,30 +76,32 @@ tg.HapticFeedback.impactOccurred('light');
             border-radius: 5px;
             cursor: pointer;
         }
-    </style>
-     <style>
-        /* Your existing CSS styles */
-        .redirect-button {
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #2ecc71;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: background-color 0.3s;
-        }
 
-        .redirect-button:hover {
-            background-color: #27ae60;
-        }
+        .redirect-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #2ecc71; /* Green color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background-color 0.3s;
+}
+
+.redirect-button:hover {
+    background-color: #27ae60; /* Darker green on hover */
+}
     </style>
+
+    
 </head>
 <body>
     <h1>Tic Tac Toe</h1>
     <div class="status" id="status">Player X's turn</div>
     <div class="board" id="board"></div>
+
+    <button id="redirectButton" class="redirect-button">Visit Our Website</button>
 
     <script>
         // Telegram Web App initialization
@@ -193,23 +195,15 @@ tg.HapticFeedback.impactOccurred('light');
             const user = tg.initDataUnsafe.user;
             document.title = `${user.first_name}'s Tic Tac Toe`;
         }
+
+
+        document.getElementById('redirectButton').addEventListener('click', () => {
+    // Replace with your desired URL
+    window.location.href = 'https://poawooptugroo.com/4/8892231';
+});
     </script>
 
-    <div class="board" id="board"></div>
-    <button id="redirectButton" class="redirect-button">Visit Our Website</button>
-
-    <script>
-        // Telegram Web App initialization
-        const tg = window.Telegram.WebApp;
-        tg.ready();
-        tg.expand();
-        tg.MainButton.setText('Close Game').onClick(tg.close).show();
-
-        // Redirect button functionality
-        document.getElementById('redirectButton').addEventListener('click', () => {
-            // Replace with your desired URL
-            window.location.href = 'https://shorturl.asia/KFX9R';
-        });
+    
 
     
     
