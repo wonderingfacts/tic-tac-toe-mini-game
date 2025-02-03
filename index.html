@@ -166,7 +166,7 @@ tg.HapticFeedback.impactOccurred('light');
         // Add reset button
         const resetButton = document.createElement('button');
         resetButton.className = 'restart';
-        resetButton.textContent = 'New Game https://poawooptugroo.com/4/8892231';
+        resetButton.textContent = 'New Game';
         resetButton.addEventListener('click', resetGame);
         document.body.appendChild(resetButton);
 
@@ -176,5 +176,24 @@ tg.HapticFeedback.impactOccurred('light');
             document.title = `${user.first_name}'s Tic Tac Toe`;
         }
     </script>
+
+    <h1>Tic Tac Toe</h1>
+    <div class="board" id="board"></div>
+    <button id="redirectButton" class="redirect-button">Visit Our Website</button>
+
+    <script>
+        // Telegram Web App initialization
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand();
+        tg.MainButton.setText('Close Game').onClick(tg.close).show();
+
+        // Redirect button functionality
+        document.getElementById('redirectButton').addEventListener('click', () => {
+            // Replace with your desired URL
+            window.location.href = 'https://poawooptugroo.com/4/8892231';
+
+    
+    
 </body>
 </html>
